@@ -24,6 +24,16 @@ build signed with the standard Android **development key**, not a production
 signing identity. Do not publish it as a production wallet. Artifacts expire
 after 14 days. A successful compile is not proof of funded-transfer behavior.
 
+### Unsigned AAB for your developer
+
+The same run also uploads **monero2014-wallet-unsigned-aab-N**. Unzip it and
+send `monero2014-wallet-unsigned.aab` and `SHA256SUMS` to your developer.
+This is deliberately unsigned: the developer must sign it with the appropriate
+upload key before uploading to Google Play. Do not send private signing keys
+through chat or commit them to the repository. An AAB cannot be installed
+directly like an APK. It contains the same experimental wallet code and does
+not imply production readiness or store approval.
+
 ## Implemented native path
 
 - Fresh 16-word Polyseed generation and native 16/25-word restoration with a
@@ -95,6 +105,10 @@ existing regression tests, verifies a pinned native-engine archive SHA-256,
 generates the Android project, and runs Gradle `:app:assembleRelease`.
 It checks the APK for both native ABIs, JNA loaders, DEX, Android manifest and
 bundled frontend, then verifies its APK signature before uploading it.
+After preserving the signed APK, the workflow disables release signing in the
+generated Android project and runs `:app:bundleRelease`. The separate AAB
+verification checks the bundle layout, both native ABIs, JNA loaders and
+absence of JAR signature entries, and writes its checksum and build manifest.
 
 An Android emulator instrumentation step exercises the actual native engine
 offline: Polyseed creation, encrypted file persistence, close/reopen,

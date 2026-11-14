@@ -68,6 +68,21 @@ jobs:
           python3 scripts/check-android-apk.py generated-artifacts/android/monero2014-wallet.apk
           APKSIGNER="$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -1)"
           "$APKSIGNER" verify generated-artifacts/android/monero2014-wallet.apk
+      - name: Build unsigned AAB for developer signing
+        working-directory: artifacts/monero2014/android
+        run: |
+          printf '\nandroid.buildTypes.release.signingConfig = null\n' >> app/build.gradle
+          ./gradlew :app:bundleRelease \
+            -PreactNativeArchitectures=arm64-v8a,x86_64 \
+            -Pandroid.enableMinifyInReleaseBuilds=false \
+            -Porg.gradle.jvmargs="-Xmx3072m -XX:MaxMetaspaceSize=768m" \
+            --max-workers=2 --console=plain
+      - name: Verify unsigned AAB
+        run: |
+          mkdir -p generated-artifacts/aab
+          cp artifacts/monero2014/android/app/build/outputs/bundle/release/app-release.aab \
+            generated-artifacts/aab/monero2014-wallet-unsigned.aab
+          python3 scripts/check-android-aab.py generated-artifacts/aab/monero2014-wallet-unsigned.aab
       - name: Record build limitations
         if: always()
         env:
@@ -78,6 +93,7 @@ jobs:
             echo "Built from commit: $GITHUB_SHA"
             echo "Regression tests: $REGRESSION_OUTCOME"
             echo "This APK uses an Android development signing key, not a production identity."
+            echo "The AAB is unsigned and must be signed by the developer before Google Play upload."
             echo "No device, funded-transfer, or wallet-security acceptance testing is claimed."
             if [ "$REGRESSION_OUTCOME" = "failure" ]; then
               echo "**Warning:** Regression tests failed. Read the test log before installing."
@@ -89,5 +105,12 @@ jobs:
         with:
           name: monero2014-wallet-apk-${{ github.run_number }}
           path: generated-artifacts/android/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload unsigned AAB and verification files
+        uses: actions/upload-artifact@v4
+        with:
+          name: monero2014-wallet-unsigned-aab-${{ github.run_number }}
+          path: generated-artifacts/aab/
           if-no-files-found: error
           retention-days: 14

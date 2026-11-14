@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Monero Wallet",
+    "slug": "monero2014",
+    "version": "1.3.2",
+    "orientation": "portrait",
+    "icon": "./assets/images/monero-premium.png",
+    "scheme": "monero2014",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.monero2014.wallet.stagenet",
+      "versionCode": 6,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/monero-premium.png",
+        "backgroundColor": "#000000"
+      }
+    },
+    "web": {
+      "favicon": "./assets/images/icon.png",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-localization",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Monero Wallet to scan payment QR codes.",
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": true
+        }
+      ],
+      "./plugins/native-wallet",
+      "react-native-quick-crypto"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

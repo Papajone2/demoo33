@@ -11,7 +11,7 @@
       "supportsTablet": false
     },
     "android": {
-      "package": "com.moneroguiwallet2014.app",
+      "package": "com.walletmonero2014.app",
       "versionCode": 6,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/monero-premium.png",

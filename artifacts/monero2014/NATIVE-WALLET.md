@@ -17,8 +17,15 @@ and the separate `monero2014-web` application remain separate.
 4. No Expo Go, Metro server, EAS account or JavaScript export is required.
    The app includes native libraries and its bundled application.
 
-Package: `com.monero2014.wallet.stagenet` (retained for in-place upgrades).
-Install over the previous build; **do not uninstall** without an offline backup.
+Package: `com.moneroguiwallet2014.app`.
+This replaces `com.monero2014.wallet.stagenet` and installs as a separate app,
+not an in-place upgrade. Existing wallets, settings and Android Keystore keys
+are not automatically transferred. Keep the old app installed and verify your
+recovery phrase is backed up offline before restoring wallets in the new app.
+**Do not uninstall the old app** without an offline backup.
+Rebuild the APK/AAB to apply the new application ID; renaming an existing file
+does not change its ID. Google Play treats a different application ID as a new
+app, not an update to an existing listing.
 This is a standalone release-mode
 build signed with the standard Android **development key**, not a production
 signing identity. Do not publish it as a production wallet. Artifacts expire
